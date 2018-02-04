@@ -51,6 +51,5 @@ Jilies Ragonha
 Denis Baptista Rosa
 
 
-![solarized palette] https://github.com/paulosoujava/nanodegreeandroid/blob/master/app/src/main/res/drawable/Screenshot_20180204-143007.png
 
 
