@@ -13,6 +13,8 @@ I check the signal with internet and if not exist I show a activity the error
 minSdkVersion 14
 targetSdkVersion 26
 
+See The VIDEO
+https://www.youtube.com/watch?v=h8fVUHRm-9M
 
 DON`T FORGET PUT YOUR API KEY IN:
 gradle.properties 
