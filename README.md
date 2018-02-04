@@ -46,6 +46,11 @@ https://www.youtube.com/watch?v=qt3WCP-_uaY
 https://www.youtube.com/watch?v=OOLFhtyCspA
 https://www.youtube.com/watch?v=4Gd2PIzU3zE
 
-Tak`s for help-me:
+Tank's for help-me:
 Jilies Ragonha
 Denis Baptista Rosa
+
+
+https://github.com/paulosoujava/nanodegreeandroid/blob/master/app/src/main/res/drawable/Screenshot_20180204-143007.png
+
+
