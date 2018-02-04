@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Movies</string>
+    <string name="popular">Popular</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="photo_movie">Photo Movie</string>
+    <string name="the_movies_splash">The Movies</string>
+    <string name="search_here">Search here...</string>
+    <string name="error_internet">Please Check your Acces with the internet!</string>
+    <string name="title_the_moive">Title the Moive</string>
+    <string name="title_aux">O Lunático</string>
+    <string name="overview">Overview</string>
+    <string name="string_dump">Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI, quando um impressor desconhecido pegou uma bandeja de tipos e os embaralhou para fazer um livro de modelos de tipos.</string>
+    <string name="release_date">Release Date</string>
+    <string name="date_dump">15/05/2018</string>
+    <string name="vote_avarege">Vote Avarege</string>
+    <string name="original_title">Original Title</string>
+    <string name="string_dump_oneLine">One Line</string>
+    <string name="warning_key_api">Opss, where yout api key</string>
+    <string name="warning_fetch_data">Opss Fetching Data! ...</string>
+    <string name="errror_try_catch">Try latter, please...</string>
+    <string name="wait_please">Fetching Movies, please waiting...</string>
+    <string name="backPopularMovie">Press Back go to Popular Movie</string>
+    <string name="title_popular">Popular Movie</string>
+    <string name="title_top_rated">Top Rated</string>
+    <string name="up_coming">Up Coming</string>
+    <string name="title_upcoming">Up Coming</string>
+    <string name="back">Back</string>
+    <string name="opss">Ops, nothing, sorry...</string>
+    <string name="found">I found</string>
+    <string name="result">result(s)</string>
+    <string name="popularity">popularity</string>
+
+</resources>
