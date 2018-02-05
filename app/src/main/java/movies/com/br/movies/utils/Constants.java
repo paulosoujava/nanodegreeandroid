@@ -19,8 +19,12 @@ public class Constants {
     public static final String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/";
     public static final String SIZE_IMAGE_185 = "w185";
     public static final String SIZE_IMAGE_500 = "w500";
-
-
+    public static final Integer UPCOMING_MOVIES = 3;
+    public static final Integer SEARCH_MOVIES = 2;
+    public static final Integer TOPRATED_MOVIES = 1;
+    public static final Integer POPULAR_MOVIES = 0;
     //ERRORS MENSSAGE
     public  static  final  String ERROR_INTERNET = "internet";
+    public  static  final  String ERROR_MISSING_DATA = "data";
+    public  static  final  String ERROR_IDS = "ERROR_IDS";
 }

@@ -5,7 +5,6 @@ import movies.com.br.movies.BuildConfig;
 import movies.com.br.movies.domain.MovieResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**

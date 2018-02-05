@@ -1,12 +1,9 @@
 package movies.com.br.movies.activiy;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -14,7 +11,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,9 +39,9 @@ public class MainActivity extends AppCompatActivity{
     private RecyclerView recyclerView;
     private List<Movie> movies;
     private String querysearch = "";
-    ProgressDialog progressDialog;
-    Toolbar toolbar;
-    Button bakcButton;
+    private ProgressDialog progressDialog;
+    private Toolbar toolbar;
+    private Button bakcButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,14 +76,14 @@ public class MainActivity extends AppCompatActivity{
         movieAdapter = new MovieAdapter( this, movies ) ;
         movieAdapter.notifyDataSetChanged();
 
-
-        loadJson(0);
+        if( !NetworkUtils.checkInternet(this))
+          loadJson(Constants.POPULAR_MOVIES );
     }
 
     @Override
     protected void onResume() {
 
-        if( !NetworkUtils.CheckInternet( this ) ){
+        if( !NetworkUtils.checkInternet( this ) ){
             startErrorIntent( Constants.ERROR_INTERNET );
         }
         super.onResume();
@@ -116,7 +112,7 @@ public class MainActivity extends AppCompatActivity{
                 public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
                     if( response.body() == null || response.body().getResults().size() == 0  )
                     {
-                        loadJson( 0 );
+                        loadJson( Constants.POPULAR_MOVIES );
                         Toast.makeText( MainActivity.this,  R.string.opss,  Toast.LENGTH_LONG ).show();
                     }else{
 
@@ -139,7 +135,6 @@ public class MainActivity extends AppCompatActivity{
                 }
             });
         }catch ( Exception e ){
-            Log.d("LOG", "000 -> "+ e.getCause() +" "+e.getMessage() );
             Toast.makeText( MainActivity.this,  R.string.errror_try_catch,  Toast.LENGTH_LONG ).show();
         }
     }
@@ -155,7 +150,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public boolean onQueryTextSubmit(final String query) {
                 querysearch = query;
-                loadJson( 2 );
+                loadJson( Constants.SEARCH_MOVIES );
                 bakcButton.setVisibility( View.VISIBLE );
                 return true;
             }
@@ -176,13 +171,13 @@ public class MainActivity extends AppCompatActivity{
             case R.id.ic_coming:
                 toolbar.setTitle(R.string.title_upcoming );
                 bakcButton.setVisibility( View.VISIBLE );
-                loadJson( 3 );
+                loadJson( Constants.UPCOMING_MOVIES );
                 return true;
 
             case R.id.ic_top_rated:
                 toolbar.setTitle(R.string.title_top_rated );
                 bakcButton.setVisibility( View.VISIBLE );
-                loadJson( 1 );
+                loadJson( Constants.TOPRATED_MOVIES );
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -192,30 +187,9 @@ public class MainActivity extends AppCompatActivity{
         Toast.makeText(getApplicationContext(), msg, duration).show();
     }
 
-
-    private  void mySimpleTheard( final Integer id ){
-        new Thread(new Runnable() {
-            public void run() {
-
-                recyclerView.post(new Runnable() {
-                    public void run() {
-
-                        loadJson( id );
-                    }
-                });
-            }
-        }).start();
-    }
-
-    public void back(View view) {
-        toolbar.setTitle(R.string.title_popular );
-        bakcButton.setVisibility( View.INVISIBLE );
-        loadJson( 0 );
-    }
-
     private void startErrorIntent( String codError ){
         Intent it = new Intent( this, ErrorActivity.class );
-        it.putExtra("ERROR", codError );
+        it.putExtra(Constants.ERROR_IDS, codError );
         startActivityForResult( it,  Constants.CLOSE_ALLL_ACTIVITY );
     }
 
@@ -224,7 +198,7 @@ public class MainActivity extends AppCompatActivity{
 
 
         if( requestCode == Constants.CLOSE_ALLL_ACTIVITY ){
-            if( !NetworkUtils.CheckInternet( this ) ){
+            if( !NetworkUtils.checkInternet( this ) ){
                 finish();
             }
         }

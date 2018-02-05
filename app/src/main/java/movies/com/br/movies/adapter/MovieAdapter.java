@@ -38,8 +38,8 @@ public class MovieAdapter extends RecyclerView.Adapter< MovieAdapter.MovieViewHo
     @Override
     public MovieAdapter.MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_movie, parent,false);
-        MovieViewHolder holder = new MovieViewHolder(view);
-        return holder;
+        return new MovieViewHolder(view);
+
 
     }
 
@@ -48,7 +48,6 @@ public class MovieAdapter extends RecyclerView.Adapter< MovieAdapter.MovieViewHo
 
         Movie movie = movies.get( position );
         holder.titleMovie.setText( movie.getTitle() );
-        String vote = Double.toString( movie.getVote_average() );
         holder.progressBar.setVisibility( View.VISIBLE );
 
         //download photo with picasso
@@ -85,25 +84,17 @@ public class MovieAdapter extends RecyclerView.Adapter< MovieAdapter.MovieViewHo
         public MovieViewHolder(View itemView) {
             super(itemView);
             //create the view to save in viewholder
-            titleMovie = ( TextView ) itemView.findViewById( R.id.tv_title );
-            photoMovie = ( ImageView ) itemView.findViewById( R.id.iv_photo );
-            progressBar = ( ProgressBar ) itemView.findViewById( R.id.progress );
+            titleMovie =  itemView.findViewById( R.id.tv_title );
+            photoMovie =  itemView.findViewById( R.id.iv_photo );
+            progressBar =  itemView.findViewById( R.id.progress );
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
                     if( pos != RecyclerView.NO_POSITION ){
-                        Movie cliMovie = movies.get( pos );
                         Intent it = new Intent( context, DetailsActivity.class );
-                        it.putExtra( "ORIGINAL_TITLE", movies.get( pos ).getOriginal_title() );
-                        it.putExtra( "TITLE", movies.get( pos ).getTitle() );
-                        it.putExtra( "POSTER_PATH", movies.get( pos ).getPoster_path() );
-                        it.putExtra( "OVERVIEW", movies.get( pos ).getOverview() );
-                        it.putExtra( "VOTE_AVERAGE", Double.toString( movies.get( pos ).getVote_average() ) );
-                        it.putExtra( "RELEASE_DATA",  movies.get( pos ).getRelease_date()  );
-                        it.putExtra( "ORIGINAL_LANGUAGE",  movies.get( pos ).getOriginal_language()  );
-                        it.putExtra( "POPULARITY",  Double.toString( movies.get( pos ).getPopularity() ) );
+                        it.putExtra(Movie.PARCELABLE_KEY, movies.get(pos));
                         it.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK );
                         context.startActivity( it );
                     }

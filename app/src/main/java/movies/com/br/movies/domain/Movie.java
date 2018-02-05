@@ -1,8 +1,10 @@
 package movies.com.br.movies.domain;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +14,7 @@ import movies.com.br.movies.utils.Constants;
  * Created by Paulo on 31/01/2018.
  */
 
-public class Movie  {
+public class Movie implements Parcelable {
 
     @SerializedName("title")
     private String title;
@@ -184,5 +186,56 @@ public class Movie  {
 
     public void setOriginal_title(String original_title) {
         this.original_title = original_title;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static  final String PARCELABLE_KEY = "movie";
+
+    public static  final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>(){
+        public Movie createFromParcel( Parcel in ){
+            return new Movie(in);
+        }
+        public  Movie[] newArray(int size){
+            return  new Movie[size];
+        }
+    };
+
+    private Movie( Parcel in ){
+        this.title = in.readString();
+        this.video =  in.readString();;
+        this.backdrop_path =  in.readString();;
+        this.overview =  in.readString();;
+        this.vote_average =  in.readDouble();;
+        this.release_date =  in.readString();;
+        this.vote_count =  in.readInt();;
+        this.id =  in.readInt();;
+        this.popularity =  in.readDouble();;
+        this.poster_path =  in.readString();;
+        this.original_language =  in.readString();;
+        this.original_title =  in.readString();;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeString( title );
+        dest.writeString( original_title );
+        dest.writeString( original_language );
+        dest.writeString( poster_path );
+        dest.writeDouble( popularity );
+        dest.writeInt( vote_count );
+        dest.writeString( release_date );
+        dest.writeDouble( vote_average );
+        dest.writeString( overview );
+        dest.writeString( backdrop_path );
+        dest.writeString( video );
+
+
+
+
     }
 }

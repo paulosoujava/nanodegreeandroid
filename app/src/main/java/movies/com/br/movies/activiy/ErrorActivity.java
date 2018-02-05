@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import movies.com.br.movies.R;
 import movies.com.br.movies.utils.Constants;
-import movies.com.br.movies.utils.NetworkUtils;
 
 public class ErrorActivity extends AppCompatActivity {
 
@@ -17,16 +16,21 @@ public class ErrorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_error);
-        errorMsg = ( TextView ) findViewById( R.id.error_msg );
+        errorMsg =  findViewById( R.id.error_msg );
         Intent it = getIntent();
 
 
-        if( it.hasExtra("ERROR") ){
-            switch ( it.getStringExtra("ERROR") ){
+        if( it.hasExtra(Constants.ERROR_IDS ) ){
+            switch ( it.getStringExtra("ERROR_IDS") ){
                 case Constants.ERROR_INTERNET :
                     errorMsg.setText( R.string.error_internet );
                     break;
+                case Constants.ERROR_MISSING_DATA :
+                    errorMsg.setText( R.string.error_data );
+                    break;
             }
+        }else{
+            errorMsg.setText( R.string.default_waring );
         }
 
     }

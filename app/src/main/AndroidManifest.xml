@@ -23,7 +23,7 @@
         </activity>
         <activity android:name=".activiy.MainActivity" />
         <activity android:name=".activiy.DetailsActivity" />
-        <activity android:name=".activiy.ErrorActivity"></activity>
+        <activity android:name=".activiy.ErrorActivity"/>
     </application>
 
 </manifest>

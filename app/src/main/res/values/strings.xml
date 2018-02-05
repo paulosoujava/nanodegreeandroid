@@ -29,5 +29,7 @@
     <string name="found">I found</string>
     <string name="result">result(s)</string>
     <string name="popularity">popularity</string>
+    <string name="error_data">Opss missing some data, try later...</string>
+    <string name="default_waring">Oh god, I don\'t know what happen.. sorry</string>
 
 </resources>
