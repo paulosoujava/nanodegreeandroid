@@ -11,6 +11,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -76,23 +77,23 @@ public class MainActivity extends AppCompatActivity{
         movieAdapter = new MovieAdapter( this, movies ) ;
         movieAdapter.notifyDataSetChanged();
 
-        if( !NetworkUtils.checkInternet(this))
-          loadJson(Constants.POPULAR_MOVIES );
+
+        loadJson(Constants.POPULAR_MOVIES );
+
     }
 
     @Override
     protected void onResume() {
-
-        if( !NetworkUtils.checkInternet( this ) ){
+        super.onResume();
+        if( !NetworkUtils.checkInternet( this )){
             startErrorIntent( Constants.ERROR_INTERNET );
         }
-        super.onResume();
     }
 
-    private void loadJson( Integer id ){
+    private void loadJson(Integer id ){
         try{
             if( BuildConfig.MY_API_KEY.isEmpty() ){
-                myToast( getString (R.string.warning_key_api ), Constants.LONG );
+                NetworkUtils.myToast(this, getString (R.string.warning_key_api ), Constants.LONG );
                 progressDialog.dismiss();
                 return;
             }
@@ -105,7 +106,8 @@ public class MainActivity extends AppCompatActivity{
                 case 1 : call = apiService.getTopRated( BuildConfig.MY_API_KEY ); break;
                 case 2 : call = apiService.getSearch(  querysearch );  break;
                 case 3 : call = apiService.getupComingMovie( BuildConfig.MY_API_KEY ); break;
-                default:call = apiService.getPopularMovie( BuildConfig.MY_API_KEY ); break;
+                default: call =
+                        apiService.getPopularMovie( BuildConfig.MY_API_KEY ); break;
             }
             call.enqueue(new Callback<MovieResponse>() {
                 @Override
@@ -183,9 +185,7 @@ public class MainActivity extends AppCompatActivity{
         return super.onOptionsItemSelected(item);
     }
 
-    private void myToast(String msg, int duration) {
-        Toast.makeText(getApplicationContext(), msg, duration).show();
-    }
+
 
     private void startErrorIntent( String codError ){
         Intent it = new Intent( this, ErrorActivity.class );

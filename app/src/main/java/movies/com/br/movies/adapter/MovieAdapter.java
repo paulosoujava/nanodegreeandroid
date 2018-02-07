@@ -23,7 +23,7 @@ import movies.com.br.movies.domain.Movie;
  * Created by Paulo on 31/01/2018.
  */
 
-public class MovieAdapter extends RecyclerView.Adapter< MovieAdapter.MovieViewHolder > {
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.VideoViewHolder> {
 
     private final List< Movie > movies;
     private Context context;
@@ -36,15 +36,15 @@ public class MovieAdapter extends RecyclerView.Adapter< MovieAdapter.MovieViewHo
     }
 
     @Override
-    public MovieAdapter.MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public VideoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_movie, parent,false);
-        return new MovieViewHolder(view);
+        return new VideoViewHolder(view);
 
 
     }
 
     @Override
-    public void onBindViewHolder(final MovieAdapter.MovieViewHolder holder,  int position) {
+    public void onBindViewHolder(final VideoViewHolder holder, int position) {
 
         Movie movie = movies.get( position );
         holder.titleMovie.setText( movie.getTitle() );
@@ -75,13 +75,13 @@ public class MovieAdapter extends RecyclerView.Adapter< MovieAdapter.MovieViewHo
 
 
 
-    public class MovieViewHolder extends RecyclerView.ViewHolder {
+    public class VideoViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView photoMovie;
         public TextView titleMovie;
         ProgressBar progressBar;
 
-        public MovieViewHolder(View itemView) {
+        public VideoViewHolder(View itemView) {
             super(itemView);
             //create the view to save in viewholder
             titleMovie =  itemView.findViewById( R.id.tv_title );

@@ -188,54 +188,59 @@ public class Movie implements Parcelable {
         this.original_title = original_title;
     }
 
+
+    public static  final String PARCELABLE_KEY = "movie";
+
     @Override
     public int describeContents() {
         return 0;
     }
 
-    public static  final String PARCELABLE_KEY = "movie";
-
-    public static  final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>(){
-        public Movie createFromParcel( Parcel in ){
-            return new Movie(in);
-        }
-        public  Movie[] newArray(int size){
-            return  new Movie[size];
-        }
-    };
-
-    private Movie( Parcel in ){
-        this.title = in.readString();
-        this.video =  in.readString();;
-        this.backdrop_path =  in.readString();;
-        this.overview =  in.readString();;
-        this.vote_average =  in.readDouble();;
-        this.release_date =  in.readString();;
-        this.vote_count =  in.readInt();;
-        this.id =  in.readInt();;
-        this.popularity =  in.readDouble();;
-        this.poster_path =  in.readString();;
-        this.original_language =  in.readString();;
-        this.original_title =  in.readString();;
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
-        dest.writeString( title );
-        dest.writeString( original_title );
-        dest.writeString( original_language );
-        dest.writeString( poster_path );
-        dest.writeDouble( popularity );
-        dest.writeInt( vote_count );
-        dest.writeString( release_date );
-        dest.writeDouble( vote_average );
-        dest.writeString( overview );
-        dest.writeString( backdrop_path );
-        dest.writeString( video );
-
-
-
-
+        dest.writeString(this.title);
+        dest.writeString(this.video);
+        dest.writeString(this.backdrop_path);
+        dest.writeString(this.overview);
+        dest.writeValue(this.vote_average);
+        dest.writeString(this.release_date);
+        dest.writeList(this.genre_ids);
+        dest.writeValue(this.vote_count);
+        dest.writeValue(this.id);
+        dest.writeValue(this.popularity);
+        dest.writeValue(this.adult);
+        dest.writeString(this.poster_path);
+        dest.writeString(this.original_language);
+        dest.writeString(this.original_title);
     }
+
+    protected Movie(Parcel in) {
+        this.title = in.readString();
+        this.video = in.readString();
+        this.backdrop_path = in.readString();
+        this.overview = in.readString();
+        this.vote_average = (Double) in.readValue(Double.class.getClassLoader());
+        this.release_date = in.readString();
+        this.genre_ids = new ArrayList<Integer>();
+        in.readList(this.genre_ids, Integer.class.getClassLoader());
+        this.vote_count = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.popularity = (Double) in.readValue(Double.class.getClassLoader());
+        this.adult = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.poster_path = in.readString();
+        this.original_language = in.readString();
+        this.original_title = in.readString();
+    }
+
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel source) {
+            return new Movie(source);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 }

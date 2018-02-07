@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,49 +9,14 @@
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="6dp">
 
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="8dp"
-                android:elevation="3dp">
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/background_toolbar_accent_blue"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="18dp"
-                        android:paddingLeft="8dp"
-                        android:textColor="@color/white_color_menu_item"
-                        android:text="@string/title_aux"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="12dp"
-                        android:textColor="@color/white_color_menu_item"
-                        android:text="@string/title_the_moive"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
@@ -71,19 +35,26 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/popularity"
+                            android:id="@+id/title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="18dp"
+                            android:gravity="center"
                             android:paddingLeft="8dp"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                            android:text="@string/title_aux"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                            android:textColor="@color/background_main_blue" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="8dp"
-                            android:text="@string/popularity"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                            android:gravity="center"
+                            android:paddingLeft="12dp"
+                            android:text="@string/title_the_moive"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="@color/background_main_blue" />
+
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -91,12 +62,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="1dp"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
                         <FrameLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@color/background_main_blue">
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
                             <ProgressBar
                                 android:id="@+id/progress"
@@ -108,60 +78,172 @@
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center|center_vertical"
+                                android:gravity="center|center_vertical"
                                 android:orientation="vertical">
 
                                 <ImageView
                                     android:id="@+id/backdrop_path"
                                     android:layout_width="@dimen/img_widht"
-                                    android:layout_height="@dimen/img_height" />
+                                    android:layout_height="@dimen/img_height"
+                                    android:layout_gravity="center" />
 
-                                <TextView
-                                    android:id="@+id/release_date"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:gravity="center"
-                                    android:text="@string/date_dump"
-                                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:gravity="center"
-                                    android:text="@string/release_date"
-                                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                             </LinearLayout>
 
 
                         </FrameLayout>
 
-                        <LinearLayout
+                        <TextView
+                            android:id="@+id/release_date"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="start"
-                            android:layout_marginLeft="16dp"
-                            android:orientation="vertical">
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="@string/date_dump"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                            android:textColor="@color/background_main_blue" />
 
-                            <TextView
-                                android:layout_width="match_parent"
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="8dp"
+                            android:gravity="center"
+                            android:text="@string/release_date"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="@color/background_main_blue" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="right"
+                            android:layout_marginBottom="8dp"
+                            android:gravity="right"
+                            android:orientation="horizontal">
+
+                            <Button
+                                style="@style/TextAppearance.AppCompat.Small"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/overview"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                                android:background="@color/background_main_blue"
+                                android:drawableTop="@android:drawable/btn_star"
+                                android:text="Favorite"
+                                android:textColor="@color/white_color_menu_item" />
 
-                            <TextView
-                                android:id="@+id/overview"
-                                android:layout_width="match_parent"
+                            <Button
+                                style="@style/TextAppearance.AppCompat.Small"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/string_dump"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
+                                android:background="@color/background_main_blue"
+                                android:drawableTop="@android:drawable/ic_menu_share"
+                                android:text="Share"
+                                android:textColor="@color/white_color_menu_item" />
 
                         </LinearLayout>
-
-
                     </LinearLayout>
+
+
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginLeft="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/overview"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textColor="@color/background_main_blue" />
+
+                    <TextView
+                        android:id="@+id/overview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/string_dump"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="@color/background_main_blue" />
+
+
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/TextAppearance.AppCompat.Large"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/trailers"
+                        android:textColor="@color/background_main_blue" />
+
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/reciclerViewTrailer"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="60dp"
+                            android:padding="8dp" />
+
+
+
+                    <TextView
+                        style="@style/TextAppearance.AppCompat.Small"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Swiep to left or right for see more" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/TextAppearance.AppCompat.Large"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/reviews"
+                        android:textColor="@color/background_main_blue" />
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -172,67 +254,103 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="8dp">
 
+
                 <LinearLayout
-                    android:id="@+id/itemEnd"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal">
+                    android:layout_gravity="start"
+                    android:layout_marginLeft="16dp"
+                    android:orientation="vertical">
 
+                    <TextView
 
-                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:layout_marginLeft="16dp"
-                        android:orientation="vertical">
+                        android:text="@string/others_information"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textColor="@color/background_main_blue" />
 
-                        <TextView
-                            android:id="@+id/vote_average"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="7dp"
-                            android:layout_marginBottom="8dp"
-                            android:text="@string/vote_avarege"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-                        <TextView
-                            android:id="@+id/original_title"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="7dp"
-                            android:layout_marginBottom="8dp"
-                            android:text="@string/original_title"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-                        <TextView
-                            android:id="@+id/original_language"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="7dp"
-                            android:text="Original Language"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:background="@color/background_main_blue" />
 
 
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/vote_average"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="000"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textColor="@color/background_main_blue" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:paddingLeft="7dp"
+                        android:text="@string/vote_avarege"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="@color/background_main_blue" />
+
+                    <TextView
+                        android:id="@+id/original_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="titulo"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textColor="@color/background_main_blue" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:paddingLeft="7dp"
+                        android:text="@string/original_title"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="@color/background_main_blue" />
+
+                    <TextView
+                        android:id="@+id/original_language"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="teste"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textColor="@color/background_main_blue" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="7dp"
+                        android:text="Original Language"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="@color/background_main_blue" />
+
+                    <TextView
+                        android:id="@+id/popularity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:paddingLeft="8dp"
+                        android:text="teste"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textColor="@color/background_main_blue" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="8dp"
+                        android:text="@string/popularity"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="@color/background_main_blue" />
 
 
                 </LinearLayout>
+
+
             </android.support.v7.widget.CardView>
 
         </LinearLayout>

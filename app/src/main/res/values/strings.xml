@@ -31,5 +31,11 @@
     <string name="popularity">popularity</string>
     <string name="error_data">Opss missing some data, try later...</string>
     <string name="default_waring">Oh god, I don\'t know what happen.. sorry</string>
+    <string name="favorite">Favorite</string>
+    <string name="my_fovorite_movie_s">My Fovorite Movie(s)</string>
+    <string name="others_information">Others Information</string>
+    <string name="reviews">Reviews</string>
+    <string name="trailers">Trailers</string>
+    <string name="fail_upload">Opss, fail to upload trailers</string>
 
 </resources>

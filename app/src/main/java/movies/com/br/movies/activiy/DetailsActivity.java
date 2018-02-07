@@ -1,19 +1,40 @@
 package movies.com.br.movies.activiy;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import movies.com.br.movies.BuildConfig;
 import movies.com.br.movies.R;
+import movies.com.br.movies.adapter.MovieAdapter;
+import movies.com.br.movies.adapter.VideoAdapter;
+import movies.com.br.movies.api.Client;
+import movies.com.br.movies.api.Service;
 import movies.com.br.movies.domain.Movie;
+import movies.com.br.movies.domain.MovieResponse;
+import movies.com.br.movies.domain.Video;
+import movies.com.br.movies.domain.VideoResponse;
 import movies.com.br.movies.utils.Constants;
+import movies.com.br.movies.utils.NetworkUtils;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -28,6 +49,11 @@ public class DetailsActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private String url_image_foto = "";
     private Movie movie;
+    private  Integer idMovie;
+    private VideoAdapter videoAdapter;
+    private RecyclerView recyclerView;
+    private List<Video> videos;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +71,23 @@ public class DetailsActivity extends AppCompatActivity {
         popularity =  findViewById(R.id.popularity);
 
 
-        progressBar.setVisibility(View.VISIBLE);
+        recyclerView =  findViewById(R.id.reciclerViewTrailer);
+
+        recyclerView.setLayoutManager(new GridLayoutManager(this, Constants.TWO_COLUMNS));
+
+
+
+        videos = new ArrayList<>();
+
+
+
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(videoAdapter);
+        videoAdapter = new VideoAdapter( this, videos ) ;
+        videoAdapter.notifyDataSetChanged();
+
+
+
 
 
         Intent it = getIntent();
@@ -54,6 +96,7 @@ public class DetailsActivity extends AppCompatActivity {
         if( bundle != null ) {
             this.movie = (Movie) bundle.getParcelable(Movie.PARCELABLE_KEY);
 
+            idMovie = movie.getId();
 
             release_date.setText(movie.getRelease_date());
 
@@ -72,6 +115,9 @@ public class DetailsActivity extends AppCompatActivity {
             popularity.setText(String.valueOf(movie.getPopularity()));
 
             loadPhotoInImageView(url_image_foto, imageMovie);
+
+
+            loadJson(idMovie );
 
         }else{
             Intent intent = new Intent( this, ErrorActivity.class );
@@ -95,5 +141,48 @@ public class DetailsActivity extends AppCompatActivity {
         });
     }
 
+    private void loadJson( Integer idMovie ){
+        try{
+            if( BuildConfig.MY_API_KEY.isEmpty() ){
+                NetworkUtils.myToast(this, getString (R.string.warning_key_api ), Constants.LONG );
+                return;
+            }
 
+            Service apiService = Client.getClient().create( Service.class );
+            Call<VideoResponse> call;
+            if( idMovie > 1  )
+                call = apiService.getTrailer(BuildConfig.MY_API_KEY);
+            else
+                call = apiService.getTrailer(BuildConfig.MY_API_KEY);
+
+
+            call.enqueue(new retrofit2.Callback<VideoResponse>() {
+                @Override
+                public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
+                    if( response.body() == null || response.body().getResults().size() == 0  )
+                    {
+                        NetworkUtils.myToast( getApplicationContext(), getString(R.string.fail_upload), Constants.LONG );
+                    }else{
+
+
+
+                        List<Video> videos = response.body().getResults();
+                        recyclerView.setAdapter( new VideoAdapter( getApplicationContext(), videos  ) );
+                        recyclerView.smoothScrollToPosition( 0 );
+                    }
+
+
+                }
+
+                @Override
+                public void onFailure(Call<VideoResponse> call, Throwable t) {
+                    Log.d("LOG", "-- "+ t.getCause() + " "+t.getMessage()+" "+ call.toString() );
+
+                    NetworkUtils.myToast( getApplicationContext(),  getString(R.string.warning_fetch_data),  Toast.LENGTH_LONG );
+                }
+            });
+        }catch ( Exception e ){
+            NetworkUtils.myToast( getApplicationContext(),  getString(R.string.errror_try_catch),  Toast.LENGTH_LONG );
+        }
+    }
 }
