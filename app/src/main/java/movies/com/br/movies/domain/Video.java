@@ -164,4 +164,18 @@ public class Video implements Parcelable {
         result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String
+    toString() {
+        return "Video{" +
+                "id='" + id + '\'' +
+                ", key='" + key + '\'' +
+                ", name='" + name + '\'' +
+                ", iso_639_1='" + iso_639_1 + '\'' +
+                ", iso_3166_1='" + iso_3166_1 + '\'' +
+                ", site='" + site + '\'' +
+                ", type='" + type + '\'' +
+                '}';
+    }
 }

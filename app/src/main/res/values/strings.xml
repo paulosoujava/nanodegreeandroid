@@ -31,11 +31,17 @@
     <string name="popularity">popularity</string>
     <string name="error_data">Opss missing some data, try later...</string>
     <string name="default_waring">Oh god, I don\'t know what happen.. sorry</string>
-    <string name="favorite">Favorite</string>
     <string name="my_fovorite_movie_s">My Fovorite Movie(s)</string>
     <string name="others_information">Others Information</string>
     <string name="reviews">Reviews</string>
-    <string name="trailers">Trailers</string>
     <string name="fail_upload">Opss, fail to upload trailers</string>
+    <string name="click_to_see">Click to see</string>
+    <string name="trailers">Trailers</string>
+    <string name="swipe_to_left_or_right_for_see_more">swipe to left or right for see more</string>
+    <string name="click_for_read_a_complete_review">Click for read a complete review</string>
+    <string name="author">author</string>
+    <string name="favorite">Favorite</string>
+    <string name="share">Share</string>
+
 
 </resources>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context=".activiy.DetailsActivity">
+    android:orientation="horizontal">
 
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,6 +29,7 @@
                     android:orientation="vertical">
 
                     <LinearLayout
+                        android:background="@color/background_main_blue"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="10dp"
@@ -43,7 +44,7 @@
                             android:paddingLeft="8dp"
                             android:text="@string/title_aux"
                             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                            android:textColor="@color/background_main_blue" />
+                            android:textColor="@color/white_color_menu_item" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -52,7 +53,7 @@
                             android:paddingLeft="12dp"
                             android:text="@string/title_the_moive"
                             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                            android:textColor="@color/background_main_blue" />
+                            android:textColor="@color/white_color_menu_item" />
 
 
                     </LinearLayout>
@@ -73,6 +74,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="center"
+                                android:progressBackgroundTint="@color/background_main_blue"
                                 android:visibility="invisible" />
 
                             <LinearLayout
@@ -128,7 +130,7 @@
                                 android:layout_height="wrap_content"
                                 android:background="@color/background_main_blue"
                                 android:drawableTop="@android:drawable/btn_star"
-                                android:text="Favorite"
+                                android:text="@string/favorite"
                                 android:textColor="@color/white_color_menu_item" />
 
                             <Button
@@ -137,7 +139,8 @@
                                 android:layout_height="wrap_content"
                                 android:background="@color/background_main_blue"
                                 android:drawableTop="@android:drawable/ic_menu_share"
-                                android:text="Share"
+                                android:text="@string/share"
+                                android:onClick="share"
                                 android:textColor="@color/white_color_menu_item" />
 
                         </LinearLayout>
@@ -189,54 +192,14 @@
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/TextAppearance.AppCompat.Large"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/trailers"
-                        android:textColor="@color/background_main_blue" />
-
-
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/reciclerViewTrailer"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginTop="60dp"
-                            android:padding="8dp" />
-
-
-
-                    <TextView
-                        style="@style/TextAppearance.AppCompat.Small"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="Swiep to left or right for see more" />
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="8dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="6dp">
 
                     <TextView
                         style="@style/TextAppearance.AppCompat.Large"
@@ -245,9 +208,43 @@
                         android:text="@string/reviews"
                         android:textColor="@color/background_main_blue" />
 
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/reciclerViewReview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="8dp" />
+
+
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="6dp">
+
+                    <TextView
+                        style="@style/TextAppearance.AppCompat.Large"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/trailers"
+                        android:textColor="@color/background_main_blue" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/reciclerViewTrailer"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="8dp" />
+
+
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
@@ -342,7 +339,6 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="8dp"
                         android:text="@string/popularity"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="@color/background_main_blue" />
@@ -358,4 +354,4 @@
     </android.support.v4.widget.NestedScrollView>
 
 
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

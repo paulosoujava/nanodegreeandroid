@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity{
                              querysearch = "";
                         }
 
-                        List<Movie> movies = response.body().getResults();
+                        movies = response.body().getResults();
                         recyclerView.setAdapter( new MovieAdapter( getApplicationContext(), movies  ) );
                         recyclerView.smoothScrollToPosition( 0 );
                     }

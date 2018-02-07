@@ -17,6 +17,7 @@ public class Constants {
     public  static  final  int CLOSE_ALLL_ACTIVITY = 1010;
     public  static  final  String BASE_URL = "http://api.themoviedb.org/3/";
     public static final String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/";
+    public static final String URL_YOUTUBE = "https://www.youtube.com/watch?v=";
     public static final String SIZE_IMAGE_185 = "w185";
     public static final String SIZE_IMAGE_500 = "w500";
     public static final Integer UPCOMING_MOVIES = 3;

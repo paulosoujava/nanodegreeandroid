@@ -24,7 +24,8 @@
         <activity android:name=".activiy.MainActivity" />
         <activity android:name=".activiy.DetailsActivity" />
         <activity android:name=".activiy.ErrorActivity" />
-        <activity android:name=".activiy.FavoriteActivity"></activity>
+        <activity android:name=".activiy.FavoriteActivity" />
+        <activity android:name=".activiy.ReviewActivity"></activity>
     </application>
 
 </manifest>

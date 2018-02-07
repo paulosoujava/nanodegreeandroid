@@ -47,7 +47,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.VideoViewHol
     public void onBindViewHolder(final VideoViewHolder holder, int position) {
 
         Movie movie = movies.get( position );
-        holder.titleMovie.setText( movie.getTitle() );
+//        holder.titleMovie.setText( movie.getTitle() );
         holder.progressBar.setVisibility( View.VISIBLE );
 
         //download photo with picasso
