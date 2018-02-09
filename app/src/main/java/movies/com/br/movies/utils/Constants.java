@@ -9,9 +9,9 @@ import android.widget.Toast;
 public class Constants {
 
 
-
+    public  static  final  int ONE_COLUMNS = 1;
     public  static  final  int TWO_COLUMNS = 2;
-    public  static  final  int FOUR_COLUMNS = 4;
+    public  static  final  int THREE_COLUMNS = 3;
     public  static  final  int LONG = Toast.LENGTH_LONG;
     public  static  final  int SHORT = Toast.LENGTH_SHORT;
     public  static  final  int CLOSE_ALLL_ACTIVITY = 1010;
@@ -28,4 +28,6 @@ public class Constants {
     public  static  final  String ERROR_INTERNET = "internet";
     public  static  final  String ERROR_MISSING_DATA = "data";
     public  static  final  String ERROR_IDS = "ERROR_IDS";
+    public  static  final  String ERROR_FAVORITE = "favorite";
+
 }

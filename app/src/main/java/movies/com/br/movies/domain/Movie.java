@@ -59,6 +59,12 @@ public class Movie implements Parcelable {
     @SerializedName("original_title")
     private String original_title;
 
+    private  String  urlBD;
+
+    public Movie() {
+
+    }
+
     public Movie(String title, String video, String backdrop_path, String overview, Double vote_average, String release_date, List<Integer> genre_ids, Integer vote_count, Integer id, Double popularity, Boolean adult, String poster_path, String original_language, String original_title) {
         this.title = title;
         this.video = video;
@@ -74,6 +80,13 @@ public class Movie implements Parcelable {
         this.poster_path = poster_path;
         this.original_language = original_language;
         this.original_title = original_title;
+    }
+
+    public Movie(Integer id,  String title, String UrlBD) {
+        this.id = id;
+        this.title = title;
+        this.urlBD = UrlBD;
+
     }
 
     public String getTitle() {
@@ -93,7 +106,7 @@ public class Movie implements Parcelable {
     }
 
     public String getBackdrop_path() {
-        return backdrop_path;
+        return   Constants.BASE_IMAGE_URL +Constants.SIZE_IMAGE_185+ backdrop_path;
     }
 
     public void setBackdrop_path(String backdrop_path) {
@@ -243,4 +256,32 @@ public class Movie implements Parcelable {
             return new Movie[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "title='" + title + '\'' +
+                ", video='" + video + '\'' +
+                ", backdrop_path='" + backdrop_path + '\'' +
+                ", overview='" + overview + '\'' +
+                ", vote_average=" + vote_average +
+                ", release_date='" + release_date + '\'' +
+                ", genre_ids=" + genre_ids +
+                ", vote_count=" + vote_count +
+                ", id=" + id +
+                ", popularity=" + popularity +
+                ", adult=" + adult +
+                ", poster_path='" + poster_path + '\'' +
+                ", original_language='" + original_language + '\'' +
+                ", original_title='" + original_title + '\'' +
+                '}';
+    }
+
+    public String getUrlBD() {
+        return urlBD;
+    }
+
+    public void setUrlBD(String urlBD) {
+        this.urlBD = urlBD;
+    }
 }

@@ -13,15 +13,5 @@
         android:layout_marginTop="69dp" />
 
 
-    <Button
-        android:id="@+id/backFloat"
-        android:onClick="back"
-        android:background="@color/background_toolbar_accent_blue"
-        android:textColor="@color/white_color_menu_item"
-        android:padding="18dp"
-        android:layout_gravity="bottom|right"
-        android:text="@string/back"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
 </FrameLayout>

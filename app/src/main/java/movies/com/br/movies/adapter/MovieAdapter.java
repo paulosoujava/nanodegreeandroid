@@ -15,9 +15,12 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import movies.com.br.movies.activiy.DetailsActivity;
 import movies.com.br.movies.R;
+import movies.com.br.movies.activiy.DetailsActivity;
+import movies.com.br.movies.data.MovieRepository;
 import movies.com.br.movies.domain.Movie;
+import movies.com.br.movies.utils.Constants;
+import movies.com.br.movies.utils.NetworkUtils;
 
 /**
  * Created by Paulo on 31/01/2018.
@@ -27,9 +30,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.VideoViewHol
 
     private final List< Movie > movies;
     private Context context;
+    private MovieRepository movieRepository;
 
 
     public MovieAdapter( Context context, List<Movie> movies ) {
+       this.movieRepository = new MovieRepository(context);
         this.movies = movies;
         this.context = context;
 
@@ -99,7 +104,35 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.VideoViewHol
                         context.startActivity( it );
                     }
                 }
+
             });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int pos = getAdapterPosition();
+                    if( pos != RecyclerView.NO_POSITION ) {
+                        if( canInsertThis(movies.get(pos) ) ){
+                            NetworkUtils.myToast(context, context.getString(R.string.yepInserMovie), Constants.SHORT );
+                            movieRepository.insert( movies.get(pos) );
+                        }else{
+
+                            NetworkUtils.myToast(context, context.getString(R.string.alreadyMovie), Constants.SHORT );
+
+                        }
+                    }
+                    return true;
+                }
+            });
+
+
+        }
+
+        private  boolean canInsertThis( Movie m ){
+
+            if( movieRepository.getById( m ) == null )
+                return  true;
+            else
+                return  false;
         }
     }
 }

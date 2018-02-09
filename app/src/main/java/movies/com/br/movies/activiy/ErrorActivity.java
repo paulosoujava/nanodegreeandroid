@@ -25,6 +25,7 @@ public class ErrorActivity extends AppCompatActivity {
                 case Constants.ERROR_INTERNET :
                     errorMsg.setText( R.string.error_internet );
                     break;
+
                 case Constants.ERROR_MISSING_DATA :
                     errorMsg.setText( R.string.error_data );
                     break;

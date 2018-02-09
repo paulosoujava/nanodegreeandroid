@@ -2,14 +2,20 @@ package movies.com.br.movies.activiy;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Layout;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -27,6 +33,8 @@ import movies.com.br.movies.adapter.ReviewAdapter;
 import movies.com.br.movies.adapter.VideoAdapter;
 import movies.com.br.movies.api.Client;
 import movies.com.br.movies.api.Service;
+import movies.com.br.movies.data.MovieRepository;
+import movies.com.br.movies.data.MovieSQLHelper;
 import movies.com.br.movies.domain.Movie;
 import movies.com.br.movies.domain.Review;
 import movies.com.br.movies.domain.ReviewResponse;
@@ -57,14 +65,15 @@ public class DetailsActivity extends AppCompatActivity {
     private RecyclerView recyclerViewReviews;
     private List<Video> videos;
     private List<Review> reviews;
-
+    private MovieRepository movieRepository;
+    private Button btnFavorite;
 
 
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_details);
+        setContentView(R.layout.activity_detail_movie);
 
         imageMovie = findViewById(R.id.backdrop_path);
         progressBar = findViewById(R.id.progress);
@@ -76,8 +85,10 @@ public class DetailsActivity extends AppCompatActivity {
         original_language = findViewById(R.id.original_language);
         popularity = findViewById(R.id.popularity);
 
+
         videos = new ArrayList<>();
         reviews = new ArrayList<>();
+        movieRepository = new MovieRepository(this);
 
         recyclerViewTrailer = findViewById(R.id.reciclerViewTrailer);
         recyclerViewReviews = findViewById(R.id.reciclerViewReview);
@@ -98,12 +109,21 @@ public class DetailsActivity extends AppCompatActivity {
         videoAdapter.notifyDataSetChanged();
         reviewAdapter.notifyDataSetChanged();
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         Intent it = getIntent();
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
+
             this.movie = (Movie) bundle.getParcelable(Movie.PARCELABLE_KEY);
+
+            CollapsingToolbarLayout collaspeLayout;
+            collaspeLayout = findViewById(R.id.collaspeLayout);
+            collaspeLayout.setTitle(movie.getTitle());
 
             idMovie = movie.getId();
 
@@ -111,7 +131,11 @@ public class DetailsActivity extends AppCompatActivity {
 
             original_title.setText(movie.getOriginal_title());
 
-            url_image_foto = movie.getPoster_path();
+            if (it.hasExtra("IMAGE_FROM_BD")) {
+                url_image_foto = bundle.getString("IMAGE_FROM_BD");
+            } else
+                url_image_foto = movie.getPoster_path();
+
 
             overview.setText(movie.getOverview());
 
@@ -130,6 +154,8 @@ public class DetailsActivity extends AppCompatActivity {
             loadReview();
 
         } else {
+
+
             Intent intent = new Intent(this, ErrorActivity.class);
             it.putExtra("ERROR", Constants.ERROR_MISSING_DATA);
             startActivity(intent);
@@ -161,11 +187,7 @@ public class DetailsActivity extends AppCompatActivity {
             Service apiService = Client.getClient().create(Service.class);
             Call<VideoResponse> call;
 
-            call = apiService.getTrailer(BuildConfig.MY_API_KEY);
-
-            //    call = apiService.getReview(String.valueOf(idMovie), BuildConfig.MY_API_KEY);
-
-
+            call = apiService.getTrailer(String.valueOf(idMovie), BuildConfig.MY_API_KEY);
             call.enqueue(new retrofit2.Callback<VideoResponse>() {
                 @Override
                 public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
@@ -179,6 +201,7 @@ public class DetailsActivity extends AppCompatActivity {
                     }
 
                 }
+
                 @Override
                 public void onFailure(Call<VideoResponse> call, Throwable t) {
                     Log.d("LOG", "-- " + t.getCause() + " " + t.getMessage() + " " + call.toString());
@@ -201,7 +224,7 @@ public class DetailsActivity extends AppCompatActivity {
             Service apiService = Client.getClient().create(Service.class);
             Call<ReviewResponse> call;
 
-               call = apiService.getReview(String.valueOf(idMovie), BuildConfig.MY_API_KEY);
+            call = apiService.getReview(String.valueOf(idMovie), BuildConfig.MY_API_KEY);
 
 
             call.enqueue(new retrofit2.Callback<ReviewResponse>() {
@@ -217,10 +240,9 @@ public class DetailsActivity extends AppCompatActivity {
                     }
 
                 }
+
                 @Override
                 public void onFailure(Call<ReviewResponse> call, Throwable t) {
-                    Log.d("LOG", "-- " + t.getCause() + " " + t.getMessage() + " " + call.toString());
-
                     NetworkUtils.myToast(getApplicationContext(), getString(R.string.warning_fetch_data), Toast.LENGTH_LONG);
                 }
             });
@@ -229,11 +251,44 @@ public class DetailsActivity extends AppCompatActivity {
         }
     }
 
-    public void share(View view) {
-        Intent share = new Intent( Intent.ACTION_SEND);
-        share.setType( "text/plain");
-        share.putExtra( Intent.EXTRA_SUBJECT, "Share " );
-        share.putExtra( Intent.EXTRA_TEXT, " Look my apk The Movie Fase 2");
-        startActivity( share );
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.ic_favorite:
+
+                if (movieRepository.insert(movie) > 0) {
+                    NetworkUtils.myToast(this, getString(R.string.insert_ok), Constants.SHORT);
+                } else {
+                    movieRepository.delete(movie);
+                    NetworkUtils.myToast(this, getString(R.string.deleted), Constants.SHORT);
+                }
+                return true;
+
+            case R.id.ic_share:
+
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.setType("text/plain");
+                share.putExtra(Intent.EXTRA_SUBJECT, "Share ");
+                share.putExtra(Intent.EXTRA_TEXT, " My app THE MOVIE FASE 2");
+                startActivity(share);
+
+                return true;
+
+            case android.R.id.home:
+                finish();
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

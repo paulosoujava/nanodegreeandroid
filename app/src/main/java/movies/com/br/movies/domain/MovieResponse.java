@@ -22,6 +22,8 @@ public class MovieResponse {
     @SerializedName("total_pages")
     private  int totalPages;
 
+
+
     public int getPage() {
         return page;
     }

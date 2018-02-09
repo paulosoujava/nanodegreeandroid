@@ -42,6 +42,19 @@
     <string name="author">author</string>
     <string name="favorite">Favorite</string>
     <string name="share">Share</string>
+    <string name="yepInserMovie">Yep is in  favorite now</string>
+    <string name="alreadyMovie">Already in favorite</string>
+    <string name="removeMovie">Remove Favorite Movie</string>
+    <string name="messegeRemove">Do you want remove this movie?</string>
+    <string name="yep">Yes</string>
+    <string name="no">No</string>
+    <string name="click_favorite">You don\'t have favorite movies, click for 1 second in a movie, for this</string>
+    <string name="you_don_t_have_any_facorite_movie">You don\'t have any facorite movie...</string>
+    <string name="insert_ok">Yep, The movie is favorite now</string>
+    <string name="my_favorite_movie_s">My Favorite Movie(s)</string>
+    <string name="title_activity_detail_movie">Detail Movie</string>
+    <string name="deleted">The movie has deleted</string>
+    <string name="myFavorite">My Favorite Movies</string>
 
 
 </resources>

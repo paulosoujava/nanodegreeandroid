@@ -4,14 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -19,8 +16,6 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import movies.com.br.movies.R;
-import movies.com.br.movies.activiy.DetailsActivity;
-import movies.com.br.movies.domain.Movie;
 import movies.com.br.movies.domain.Video;
 import movies.com.br.movies.utils.Constants;
 
@@ -52,10 +47,22 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     public void onBindViewHolder(final VideoAdapter.VideoViewHolder holder, int position) {
 
         Video video = videos.get( position );
+//https://img.youtube.com/vi/id_do_video/default.jpg
+        String url = "https://img.youtube.com/vi/"+video.getKey()+"/default.jpg";
+        Picasso.with( context ).load( url ).fit().into(holder.photoVideo, new Callback() {
+            @Override
+            public void onSuccess() {
+                    holder.progressBar.setVisibility(View.VISIBLE);
+            }
 
-       // holder.titleMovie.setText( video.getName() );
+            @Override
+            public void onError() {
+                holder.progressBar.setVisibility(View.INVISIBLE);
+            }
+        });
 
-        }
+
+    }
 
 
     @Override
@@ -67,13 +74,14 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     public class VideoViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView photoMovie;
-        //public TextView titleMovie;
+        public ImageView photoVideo;
+        public  ProgressBar progressBar;
 
         public VideoViewHolder(final View itemView) {
             super(itemView);
             //create the view to save in viewholder
-           // titleMovie =  itemView.findViewById( R.id.tv_title );
+            photoVideo =  itemView.findViewById( R.id.imgTrailer );
+            progressBar = itemView.findViewById(R.id.progress );
 
 
             itemView.setOnClickListener(new View.OnClickListener() {

@@ -26,6 +26,7 @@ import movies.com.br.movies.R;
 import movies.com.br.movies.adapter.MovieAdapter;
 import movies.com.br.movies.api.Client;
 import movies.com.br.movies.api.Service;
+import movies.com.br.movies.data.MovieRepository;
 import movies.com.br.movies.domain.Movie;
 import movies.com.br.movies.domain.MovieResponse;
 import movies.com.br.movies.utils.Constants;
@@ -42,15 +43,17 @@ public class MainActivity extends AppCompatActivity{
     private String querysearch = "";
     private ProgressDialog progressDialog;
     private Toolbar toolbar;
-    private Button bakcButton;
+    private int back_to_home = Constants.POPULAR_MOVIES;
+    private MovieRepository movieRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bakcButton = findViewById(R.id.backFloat);
-        bakcButton.setVisibility( View.INVISIBLE );
+        movieRepository = new MovieRepository(this);
+
+
         toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle( R.string.title_popular );
@@ -69,7 +72,7 @@ public class MainActivity extends AppCompatActivity{
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             recyclerView.setLayoutManager(new GridLayoutManager(this, Constants.TWO_COLUMNS));
         } else {
-            recyclerView.setLayoutManager(new GridLayoutManager(this, Constants.FOUR_COLUMNS));
+            recyclerView.setLayoutManager(new GridLayoutManager(this, Constants.THREE_COLUMNS));
         }
 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -112,9 +115,8 @@ public class MainActivity extends AppCompatActivity{
             call.enqueue(new Callback<MovieResponse>() {
                 @Override
                 public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                    if( response.body() == null || response.body().getResults().size() == 0  )
+                    if( response.body() == null   )
                     {
-                        loadJson( Constants.POPULAR_MOVIES );
                         Toast.makeText( MainActivity.this,  R.string.opss,  Toast.LENGTH_LONG ).show();
                     }else{
 
@@ -153,7 +155,7 @@ public class MainActivity extends AppCompatActivity{
             public boolean onQueryTextSubmit(final String query) {
                 querysearch = query;
                 loadJson( Constants.SEARCH_MOVIES );
-                bakcButton.setVisibility( View.VISIBLE );
+                back_to_home = Constants.SEARCH_MOVIES;
                 return true;
             }
 
@@ -172,14 +174,20 @@ public class MainActivity extends AppCompatActivity{
         switch (item.getItemId()) {
             case R.id.ic_coming:
                 toolbar.setTitle(R.string.title_upcoming );
-                bakcButton.setVisibility( View.VISIBLE );
+                back_to_home = Constants.UPCOMING_MOVIES;
                 loadJson( Constants.UPCOMING_MOVIES );
                 return true;
 
             case R.id.ic_top_rated:
                 toolbar.setTitle(R.string.title_top_rated );
-                bakcButton.setVisibility( View.VISIBLE );
+                back_to_home = Constants.TOPRATED_MOVIES;
                 loadJson( Constants.TOPRATED_MOVIES );
+                return true;
+            case R.id.ic_favorite:
+                if( movieRepository.getAllMovie().size() > 0 )
+                    startActivity( new Intent( this, FavoriteActivity.class));
+                else
+                    NetworkUtils.myToast(this,getString(R.string.click_favorite), Constants.LONG );
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -201,6 +209,18 @@ public class MainActivity extends AppCompatActivity{
             if( !NetworkUtils.checkInternet( this ) ){
                 finish();
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if( back_to_home == Constants.TOPRATED_MOVIES  ||
+            back_to_home == Constants.SEARCH_MOVIES ||
+            back_to_home == Constants.UPCOMING_MOVIES ){
+            loadJson( Constants.POPULAR_MOVIES );
+            toolbar.setTitle(R.string.popular );
+        }else{
+            finish();
         }
     }
 }
