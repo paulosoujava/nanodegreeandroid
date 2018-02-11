@@ -7,8 +7,8 @@
         app:actionViewClass="android.support.v7.widget.SearchView"
         android:icon="@android:drawable/ic_menu_search"
         android:orderInCategory="1"
-        android:title="@string/popular"
-        app:showAsAction="always" />
+        android:title="@string/search_here"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/ic_coming"
@@ -20,6 +20,12 @@
         android:id="@+id/ic_top_rated"
         android:orderInCategory="3"
         android:title="@string/top_rated"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/ic_popular"
+        android:orderInCategory="4"
+        android:title="@string/popular"
         app:showAsAction="never" />
 
 

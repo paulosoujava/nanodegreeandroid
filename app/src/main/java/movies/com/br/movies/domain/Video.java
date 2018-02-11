@@ -1,6 +1,5 @@
 package movies.com.br.movies.domain;
 
-import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 

@@ -1,7 +1,11 @@
 package movies.com.br.movies.activiy;
 
-import android.app.ProgressDialog;
+
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,24 +16,17 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import movies.com.br.movies.R;
 import movies.com.br.movies.adapter.FavoriteAdapter;
-import movies.com.br.movies.adapter.MovieAdapter;
-import movies.com.br.movies.data.MovieRepository;
-import movies.com.br.movies.domain.Movie;
+import movies.com.br.movies.data.TaskContract;
 import movies.com.br.movies.utils.Constants;
-import movies.com.br.movies.utils.NetworkUtils;
 
-public class FavoriteActivity extends AppCompatActivity {
+public class FavoriteActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private FavoriteAdapter movieAdapter;
     private RecyclerView recyclerView;
-    private List<Movie> movies;
-    private MovieRepository movieRepository;
-
+    public static final int TASK_LOADER_ID = 0;
+    private TextView warning;
 
 
     @Override
@@ -38,32 +35,128 @@ public class FavoriteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_favorite);
 
         recyclerView = findViewById(R.id.RecyclerViewFavorite);
+        warning = findViewById(R.id.warning);
+        warning.setText(R.string.anyMovie);
+        warning.setVisibility(View.INVISIBLE);
+
+
         recyclerView.setLayoutManager(new GridLayoutManager(this, Constants.TWO_COLUMNS));
 
         CollapsingToolbarLayout collaspeLayout;
         collaspeLayout = findViewById(R.id.collaspeLayout);
         collaspeLayout.setTitle(getString(R.string.myFavorite));
 
-        //from BD
-        movieRepository = new MovieRepository(this);
-        movies = movieRepository.getAllMovie();
+        movieAdapter = new FavoriteAdapter(this);
 
 
-            movieAdapter = new FavoriteAdapter(this, movies);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            recyclerView.setLayoutManager(new GridLayoutManager(this, Constants.TWO_COLUMNS));
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(this, Constants.THREE_COLUMNS));
+        }
+
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(movieAdapter);
+        movieAdapter.notifyDataSetChanged();
+
+        getSupportLoaderManager().initLoader(TASK_LOADER_ID, null, this);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        movieAdapter = new FavoriteAdapter(this);
+        recyclerView.setAdapter(movieAdapter);
+        getSupportLoaderManager().restartLoader(TASK_LOADER_ID, null, this);
 
 
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                recyclerView.setLayoutManager(new GridLayoutManager(this, Constants.TWO_COLUMNS));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(this, Constants.THREE_COLUMNS));
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("LOG", "onstart");
+    }
+
+    public Loader<Cursor> onCreateLoader(int id, final Bundle loaderArgs) {
+
+        return new AsyncTaskLoader<Cursor>(this) {
+
+            // Initialize a Cursor, this will hold all the task data
+            Cursor mTaskData = null;
+
+            // onStartLoading() is called when a loader first starts loading data
+            @Override
+            protected void onStartLoading() {
+                if (mTaskData != null) {
+                    // Delivers any previously loaded data immediately
+                    deliverResult(mTaskData);
+                } else {
+                    // Force a new load
+                    forceLoad();
+                }
             }
 
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
-            recyclerView.setAdapter(movieAdapter);
-            movieAdapter.notifyDataSetChanged();
+            // loadInBackground() performs asynchronous loading of data
+            @Override
+            public Cursor loadInBackground() {
+                Cursor c;
+                try {
+                    c = getContentResolver().query(TaskContract.TaskEntry.CONTENT_URI,
+                            null,
+                            null,
+                            null,
+                            null
+                    );
+
+                    if (c.getCount() <= 0) {
+                        warning.setVisibility(View.VISIBLE);
+                    }
+                    return c;
+
+
+                } catch (Exception e) {
+                    // NetworkUtils.myToast(getApplicationContext(), getString(R.string.fail), Constants.SHORT );
+                    return null;
+                }
+
+
+            }
+
+            // deliverResult sends the result of the load, a Cursor, to the registered listener
+            public void deliverResult(Cursor data) {
+                mTaskData = data;
+                super.deliverResult(data);
+            }
+        };
 
     }
 
 
+    /**
+     * Called when a previously created loader has finished its load.
+     *
+     * @param loader The Loader that has finished.
+     * @param data   The data generated by the Loader.
+     */
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        // Update the data that the adapter uses to create ViewHolders
+        movieAdapter.swapCursor(data);
+    }
+
+
+    /**
+     * Called when a previously created loader is being reset, and thus
+     * making its data unavailable.
+     * onLoaderReset removes any references this activity had to the loader's data.
+     *
+     * @param loader The Loader that is being reset.
+     */
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        movieAdapter.swapCursor(null);
+    }
 
 }

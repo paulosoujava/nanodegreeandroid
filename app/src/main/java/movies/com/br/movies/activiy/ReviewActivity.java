@@ -3,7 +3,6 @@ package movies.com.br.movies.activiy;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 
 import movies.com.br.movies.R;
@@ -25,8 +24,8 @@ public class ReviewActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            author.setText( it.getStringExtra("AUTHOR") );
-            review.setText(  it.getStringExtra("REVIEW") );
+            author.setText(it.getStringExtra("AUTHOR"));
+            review.setText(it.getStringExtra("REVIEW"));
         }
     }
 }

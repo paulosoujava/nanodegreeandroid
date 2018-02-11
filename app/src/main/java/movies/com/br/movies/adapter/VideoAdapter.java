@@ -25,11 +25,11 @@ import movies.com.br.movies.utils.Constants;
 
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder> {
 
-    private final List< Video > videos;
+    private final List<Video> videos;
     private Context context;
 
 
-    public VideoAdapter( Context context, List<Video> videos ) {
+    public VideoAdapter(Context context, List<Video> videos) {
         this.videos = videos;
         this.context = context;
 
@@ -37,7 +37,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     @Override
     public VideoAdapter.VideoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_trailer, parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_trailer, parent, false);
         return new VideoAdapter.VideoViewHolder(view);
 
 
@@ -46,13 +46,13 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     @Override
     public void onBindViewHolder(final VideoAdapter.VideoViewHolder holder, int position) {
 
-        Video video = videos.get( position );
+        Video video = videos.get(position);
 //https://img.youtube.com/vi/id_do_video/default.jpg
-        String url = "https://img.youtube.com/vi/"+video.getKey()+"/default.jpg";
-        Picasso.with( context ).load( url ).fit().into(holder.photoVideo, new Callback() {
+        String url = "https://img.youtube.com/vi/" + video.getKey() + "/default.jpg";
+        Picasso.with(context).load(url).fit().into(holder.photoVideo, new Callback() {
             @Override
             public void onSuccess() {
-                    holder.progressBar.setVisibility(View.VISIBLE);
+                holder.progressBar.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -71,25 +71,24 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     }
 
 
-
     public class VideoViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView photoVideo;
-        public  ProgressBar progressBar;
+        public ProgressBar progressBar;
 
         public VideoViewHolder(final View itemView) {
             super(itemView);
             //create the view to save in viewholder
-            photoVideo =  itemView.findViewById( R.id.imgTrailer );
-            progressBar = itemView.findViewById(R.id.progress );
+            photoVideo = itemView.findViewById(R.id.imgTrailer);
+            progressBar = itemView.findViewById(R.id.progress);
 
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
-                    if( pos != RecyclerView.NO_POSITION ){
-                        context.startActivity( new Intent( Intent.ACTION_VIEW, Uri.parse(  Constants.URL_YOUTUBE+ videos.get( pos).getKey()) ) );
+                    if (pos != RecyclerView.NO_POSITION) {
+                        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.URL_YOUTUBE + videos.get(pos).getKey())));
                     }
                 }
             });

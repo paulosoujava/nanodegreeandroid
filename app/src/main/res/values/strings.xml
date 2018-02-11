@@ -44,6 +44,7 @@
     <string name="share">Share</string>
     <string name="yepInserMovie">Yep is in  favorite now</string>
     <string name="alreadyMovie">Already in favorite</string>
+    <string name="removedMovie">Removed!</string>
     <string name="removeMovie">Remove Favorite Movie</string>
     <string name="messegeRemove">Do you want remove this movie?</string>
     <string name="yep">Yes</string>
@@ -55,6 +56,9 @@
     <string name="title_activity_detail_movie">Detail Movie</string>
     <string name="deleted">The movie has deleted</string>
     <string name="myFavorite">My Favorite Movies</string>
+    <string name="fail">Failed to asynchronously load data</string>
+    <string name="anyMovie">You don\'t have any favorite movie. :)</string>
+    <string name="this_is_your_favorite_movie">This is your favorite movie</string>
 
 
 </resources>

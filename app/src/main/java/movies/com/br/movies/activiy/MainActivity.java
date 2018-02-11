@@ -11,11 +11,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -26,7 +23,6 @@ import movies.com.br.movies.R;
 import movies.com.br.movies.adapter.MovieAdapter;
 import movies.com.br.movies.api.Client;
 import movies.com.br.movies.api.Service;
-import movies.com.br.movies.data.MovieRepository;
 import movies.com.br.movies.domain.Movie;
 import movies.com.br.movies.domain.MovieResponse;
 import movies.com.br.movies.utils.Constants;
@@ -35,7 +31,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     private MovieAdapter movieAdapter;
     private RecyclerView recyclerView;
@@ -44,21 +40,19 @@ public class MainActivity extends AppCompatActivity{
     private ProgressDialog progressDialog;
     private Toolbar toolbar;
     private int back_to_home = Constants.POPULAR_MOVIES;
-    private MovieRepository movieRepository;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        movieRepository = new MovieRepository(this);
 
-
-        toolbar =  findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle( R.string.title_popular );
+        toolbar.setTitle(R.string.title_popular);
 
-        recyclerView =  findViewById(R.id.RecyclerView);
+        recyclerView = findViewById(R.id.RecyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, Constants.TWO_COLUMNS));
 
 
@@ -77,57 +71,63 @@ public class MainActivity extends AppCompatActivity{
 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(movieAdapter);
-        movieAdapter = new MovieAdapter( this, movies ) ;
+        movieAdapter = new MovieAdapter(this, movies);
         movieAdapter.notifyDataSetChanged();
 
 
-        loadJson(Constants.POPULAR_MOVIES );
+        loadJson(Constants.POPULAR_MOVIES);
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if( !NetworkUtils.checkInternet( this )){
-            startErrorIntent( Constants.ERROR_INTERNET );
+        if (!NetworkUtils.checkInternet(this)) {
+            startErrorIntent(Constants.ERROR_INTERNET);
         }
     }
 
-    private void loadJson(Integer id ){
-        try{
-            if( BuildConfig.MY_API_KEY.isEmpty() ){
-                NetworkUtils.myToast(this, getString (R.string.warning_key_api ), Constants.LONG );
+    private void loadJson(Integer id) {
+        try {
+            if (BuildConfig.MY_API_KEY.isEmpty()) {
+                NetworkUtils.myToast(this, getString(R.string.warning_key_api), Constants.LONG);
                 progressDialog.dismiss();
                 return;
             }
 
-            Service apiService = Client.getClient().create( Service.class );
+            Service apiService = Client.getClient().create(Service.class);
             Call<MovieResponse> call;
 
-            switch ( id )
-            {
-                case 1 : call = apiService.getTopRated( BuildConfig.MY_API_KEY ); break;
-                case 2 : call = apiService.getSearch(  querysearch );  break;
-                case 3 : call = apiService.getupComingMovie( BuildConfig.MY_API_KEY ); break;
-                default: call =
-                        apiService.getPopularMovie( BuildConfig.MY_API_KEY ); break;
+            switch (id) {
+                case 1:
+                    call = apiService.getTopRated(BuildConfig.MY_API_KEY);
+                    break;
+                case 2:
+                    call = apiService.getSearch(querysearch);
+                    break;
+                case 3:
+                    call = apiService.getupComingMovie(BuildConfig.MY_API_KEY);
+                    break;
+                default:
+                    call =
+                            apiService.getPopularMovie(BuildConfig.MY_API_KEY);
+                    break;
             }
             call.enqueue(new Callback<MovieResponse>() {
                 @Override
                 public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                    if( response.body() == null   )
-                    {
-                        Toast.makeText( MainActivity.this,  R.string.opss,  Toast.LENGTH_LONG ).show();
-                    }else{
+                    if (response.body() == null) {
+                        Toast.makeText(MainActivity.this, R.string.opss, Toast.LENGTH_LONG).show();
+                    } else {
 
-                        if( !querysearch.isEmpty() ){
-                            Toast.makeText( MainActivity.this,  getString(R.string.found)+ " [ "+ response.body().getResults().size()+" ] "+ getString(R.string.result) ,  Toast.LENGTH_LONG ).show();
-                             querysearch = "";
+                        if (!querysearch.isEmpty()) {
+                            Toast.makeText(MainActivity.this, getString(R.string.found) + " [ " + response.body().getResults().size() + " ] " + getString(R.string.result), Toast.LENGTH_LONG).show();
+                            querysearch = "";
                         }
 
                         movies = response.body().getResults();
-                        recyclerView.setAdapter( new MovieAdapter( getApplicationContext(), movies  ) );
-                        recyclerView.smoothScrollToPosition( 0 );
+                        recyclerView.setAdapter(new MovieAdapter(getApplicationContext(), movies));
+                        recyclerView.smoothScrollToPosition(0);
                     }
 
                     progressDialog.dismiss();
@@ -135,11 +135,11 @@ public class MainActivity extends AppCompatActivity{
 
                 @Override
                 public void onFailure(Call<MovieResponse> call, Throwable t) {
-                    Toast.makeText( MainActivity.this,  R.string.warning_fetch_data,  Toast.LENGTH_LONG ).show();
+                    Toast.makeText(MainActivity.this, R.string.warning_fetch_data, Toast.LENGTH_LONG).show();
                 }
             });
-        }catch ( Exception e ){
-            Toast.makeText( MainActivity.this,  R.string.errror_try_catch,  Toast.LENGTH_LONG ).show();
+        } catch (Exception e) {
+            Toast.makeText(MainActivity.this, R.string.errror_try_catch, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public boolean onQueryTextSubmit(final String query) {
                 querysearch = query;
-                loadJson( Constants.SEARCH_MOVIES );
+                loadJson(Constants.SEARCH_MOVIES);
                 back_to_home = Constants.SEARCH_MOVIES;
                 return true;
             }
@@ -173,40 +173,41 @@ public class MainActivity extends AppCompatActivity{
 
         switch (item.getItemId()) {
             case R.id.ic_coming:
-                toolbar.setTitle(R.string.title_upcoming );
+                toolbar.setTitle(R.string.title_upcoming);
                 back_to_home = Constants.UPCOMING_MOVIES;
-                loadJson( Constants.UPCOMING_MOVIES );
+                loadJson(Constants.UPCOMING_MOVIES);
                 return true;
 
             case R.id.ic_top_rated:
-                toolbar.setTitle(R.string.title_top_rated );
+                toolbar.setTitle(R.string.title_top_rated);
                 back_to_home = Constants.TOPRATED_MOVIES;
-                loadJson( Constants.TOPRATED_MOVIES );
+                loadJson(Constants.TOPRATED_MOVIES);
                 return true;
             case R.id.ic_favorite:
-                if( movieRepository.getAllMovie().size() > 0 )
-                    startActivity( new Intent( this, FavoriteActivity.class));
-                else
-                    NetworkUtils.myToast(this,getString(R.string.click_favorite), Constants.LONG );
+                startActivity(new Intent(this, FavoriteActivity.class));
                 return true;
+            case R.id.ic_popular:
+                if (back_to_home != Constants.POPULAR_MOVIES) {
+                    loadJson(Constants.POPULAR_MOVIES);
+                    toolbar.setTitle(R.string.popular);
+                }
         }
         return super.onOptionsItemSelected(item);
     }
 
 
-
-    private void startErrorIntent( String codError ){
-        Intent it = new Intent( this, ErrorActivity.class );
-        it.putExtra(Constants.ERROR_IDS, codError );
-        startActivityForResult( it,  Constants.CLOSE_ALLL_ACTIVITY );
+    private void startErrorIntent(String codError) {
+        Intent it = new Intent(this, ErrorActivity.class);
+        it.putExtra(Constants.ERROR_IDS, codError);
+        startActivityForResult(it, Constants.CLOSE_ALLL_ACTIVITY);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 
-        if( requestCode == Constants.CLOSE_ALLL_ACTIVITY ){
-            if( !NetworkUtils.checkInternet( this ) ){
+        if (requestCode == Constants.CLOSE_ALLL_ACTIVITY) {
+            if (!NetworkUtils.checkInternet(this)) {
                 finish();
             }
         }
@@ -214,12 +215,12 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     public void onBackPressed() {
-        if( back_to_home == Constants.TOPRATED_MOVIES  ||
-            back_to_home == Constants.SEARCH_MOVIES ||
-            back_to_home == Constants.UPCOMING_MOVIES ){
-            loadJson( Constants.POPULAR_MOVIES );
-            toolbar.setTitle(R.string.popular );
-        }else{
+        if (back_to_home == Constants.TOPRATED_MOVIES ||
+                back_to_home == Constants.SEARCH_MOVIES ||
+                back_to_home == Constants.UPCOMING_MOVIES) {
+            loadJson(Constants.POPULAR_MOVIES);
+            toolbar.setTitle(R.string.popular);
+        } else {
             finish();
         }
     }

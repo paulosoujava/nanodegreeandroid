@@ -26,6 +26,11 @@
         <activity android:name=".activiy.FavoriteActivity" />
         <activity android:name=".activiy.ReviewActivity" />
         <activity android:name=".activiy.DetailsActivity" />
+        
+        <provider
+            android:authorities="movies.com.br.movies"
+            android:name="movies.com.br.movies.data.TaskContentProvider"
+            android:exported="false" />
     </application>
 
 </manifest>

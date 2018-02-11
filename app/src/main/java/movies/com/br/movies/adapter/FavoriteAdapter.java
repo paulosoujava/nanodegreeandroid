@@ -2,8 +2,8 @@ package movies.com.br.movies.adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +14,11 @@ import android.widget.ProgressBar;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import movies.com.br.movies.R;
 import movies.com.br.movies.activiy.DetailsActivity;
-import movies.com.br.movies.activiy.FavoriteActivity;
-import movies.com.br.movies.data.MovieRepository;
+import movies.com.br.movies.data.TaskContract;
 import movies.com.br.movies.domain.Movie;
 
 /**
@@ -28,18 +27,17 @@ import movies.com.br.movies.domain.Movie;
 
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.VideoViewHolder> {
 
-    private List<Movie> movies;
+
     private Context context;
-    private MovieRepository movieRepository;
     private AlertDialog.Builder builder;
+    private Cursor mCursor;
+    private ArrayList<Movie> movies;
 
 
-    public FavoriteAdapter(Context context, List<Movie> movies) {
-        this.movieRepository = new MovieRepository(context);
-        this.movies = movies;
+    public FavoriteAdapter(Context context) {
         this.context = context;
         this.builder = new AlertDialog.Builder(context);
-
+        this.movies = new ArrayList<>();
     }
 
     @Override
@@ -53,13 +51,45 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.VideoV
     @Override
     public void onBindViewHolder(final VideoViewHolder holder, int position) {
 
-        Movie movie = movies.get(position);
+
+        int idxImg = mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_IMAGE);
+
+        int indexId = mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_ID);
+        int indexTitle = mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_TITLE);
+        int indexdOrItle = mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_ORIGINAL_TITLE);
+        int indexPOSTPAT = mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_POST_PATH);
+        int indexPopu = mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_POPULARITY);
+        int indexLang = mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_ORIGINAL_LANGUAGE);
+        int indexVote = mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_VOTE_AVERAGE);
+        int indexAdult = mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_ADULT);
+        int indexVideo = mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_VIDEO);
+        int indexRelease = mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_RELEASE_DATE);
+        int indexOverview = mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_OVERVIEW);
+        int indexVoteCount = mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_VOTE_COUNT);
+        mCursor.moveToPosition(position);
+        Movie movie = new Movie();
+
+        movie.setTitle(mCursor.getString(idxImg));
+
+        movie.setId(mCursor.getInt(indexId));
+        movie.setAdult(Boolean.parseBoolean(mCursor.getString(indexAdult)));
+        movie.setTitle(mCursor.getString(indexTitle));
+        movie.setUrlBD(mCursor.getString(indexPOSTPAT));
+        movie.setVote_count(mCursor.getInt(indexVoteCount));
+        movie.setOverview(mCursor.getString(indexOverview));
+        movie.setVote_average(mCursor.getDouble(indexVote));
+        movie.setRelease_date(mCursor.getString(indexRelease));
+        movie.setVideo(mCursor.getString(indexVideo));
+        movie.setPopularity(mCursor.getDouble(indexPopu));
+        movie.setBackdrop_path(mCursor.getString(indexPOSTPAT));
+        movie.setPoster_path(mCursor.getString(indexPOSTPAT));
+        movie.setOriginal_title(mCursor.getString(indexdOrItle));
+        movie.setOriginal_language(mCursor.getString(indexLang));
+
+        movies.add(movie);
         holder.progressBar.setVisibility(View.VISIBLE);
-        movie.setUrlBD( movie.getUrlBD() );
-
-
         //download photo with picasso
-        Picasso.with(context).load(movie.getUrlBD()).fit().into(holder.photoMovie, new Callback() {
+        Picasso.with(context).load(mCursor.getString(indexPOSTPAT)).fit().into(holder.photoMovie, new Callback() {
             @Override
             public void onSuccess() {
                 holder.progressBar.setVisibility(View.GONE);
@@ -77,7 +107,30 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.VideoV
 
     @Override
     public int getItemCount() {
-        return this.movies != null ? this.movies.size() : 0;
+        if (mCursor == null) {
+            return 0;
+        }
+        return mCursor.getCount();
+    }
+
+
+    /**
+     * When data changes and a re-query occurs, this function swaps the old Cursor
+     * with a newly updated Cursor (Cursor c) that is passed in.
+     */
+    public Cursor swapCursor(Cursor c) {
+        // check if this cursor is the same as the previous cursor (mCursor)
+        if (mCursor == c) {
+            return null; // bc nothing has changed
+        }
+        Cursor temp = mCursor;
+        this.mCursor = c; // new cursor value assigned
+
+        //check if this is a valid cursor, then update the cursor
+        if (c != null) {
+            this.notifyDataSetChanged();
+        }
+        return temp;
     }
 
 
@@ -92,61 +145,25 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.VideoV
             photoMovie = itemView.findViewById(R.id.iv_photo);
             progressBar = itemView.findViewById(R.id.progress);
 
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+
                     int pos = getAdapterPosition();
                     if (pos != RecyclerView.NO_POSITION) {
-
-                        movieRepository.getById( movies.get( pos ));
                         Intent it = new Intent(context, DetailsActivity.class);
-                        it.putExtra(Movie.PARCELABLE_KEY, movieRepository.getById(movies.get( pos )));
-                        it.putExtra("IMAGE_FROM_BD",movies.get(pos).getUrlBD() );
+                        it.putExtra(Movie.PARCELABLE_KEY, movies.get(pos));
+                        it.putExtra("IMAGE_FROM_BD", movies.get(pos).getUrlBD());
                         it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(it);
 
                     }
 
+
                 }
             });
-
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-
-                    int pos = getAdapterPosition();
-                    if (pos != RecyclerView.NO_POSITION) {
-                        final Movie movie = movies.get(pos);
-                        builder.setIcon(R.drawable.ic_launcher_background);
-                        builder.setTitle(R.string.removeMovie);
-                        builder.setMessage(R.string.messegeRemove);
-                        builder.setPositiveButton(R.string.yep, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                movieRepository.delete(movie);
-                                movies = movieRepository.getAllMovie();
-                                notifyDataSetChanged();
-
-                                if( movieRepository.getAllMovie().size() <= 0 ){
-                                    ((FavoriteActivity)context).finish();
-                                }
-
-                             }
-                        });
-                        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                return;
-                            }
-                        });
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
-
-                    }
-                    return true;
-                }
-            });
-
 
         }
     }

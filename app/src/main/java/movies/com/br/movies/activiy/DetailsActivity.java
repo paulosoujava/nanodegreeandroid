@@ -1,21 +1,22 @@
 package movies.com.br.movies.activiy;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Layout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -33,8 +34,7 @@ import movies.com.br.movies.adapter.ReviewAdapter;
 import movies.com.br.movies.adapter.VideoAdapter;
 import movies.com.br.movies.api.Client;
 import movies.com.br.movies.api.Service;
-import movies.com.br.movies.data.MovieRepository;
-import movies.com.br.movies.data.MovieSQLHelper;
+import movies.com.br.movies.data.TaskContract;
 import movies.com.br.movies.domain.Movie;
 import movies.com.br.movies.domain.Review;
 import movies.com.br.movies.domain.ReviewResponse;
@@ -55,6 +55,7 @@ public class DetailsActivity extends AppCompatActivity {
     private TextView vote_average;
     private TextView original_title;
     private TextView original_language;
+    private TextView favoriteMovie;
     private ProgressBar progressBar;
     private String url_image_foto = "";
     private Movie movie;
@@ -65,9 +66,7 @@ public class DetailsActivity extends AppCompatActivity {
     private RecyclerView recyclerViewReviews;
     private List<Video> videos;
     private List<Review> reviews;
-    private MovieRepository movieRepository;
-    private Button btnFavorite;
-
+    private AlertDialog.Builder builder;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -84,11 +83,13 @@ public class DetailsActivity extends AppCompatActivity {
         original_title = findViewById(R.id.original_title);
         original_language = findViewById(R.id.original_language);
         popularity = findViewById(R.id.popularity);
+        favoriteMovie = findViewById(R.id.favoriteMovie);
 
 
+        builder = new AlertDialog.Builder(this);
         videos = new ArrayList<>();
         reviews = new ArrayList<>();
-        movieRepository = new MovieRepository(this);
+
 
         recyclerViewTrailer = findViewById(R.id.reciclerViewTrailer);
         recyclerViewReviews = findViewById(R.id.reciclerViewReview);
@@ -119,6 +120,7 @@ public class DetailsActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
 
+
             this.movie = (Movie) bundle.getParcelable(Movie.PARCELABLE_KEY);
 
             CollapsingToolbarLayout collaspeLayout;
@@ -133,6 +135,7 @@ public class DetailsActivity extends AppCompatActivity {
 
             if (it.hasExtra("IMAGE_FROM_BD")) {
                 url_image_foto = bundle.getString("IMAGE_FROM_BD");
+                favoriteMovie.setVisibility(View.VISIBLE);
             } else
                 url_image_foto = movie.getPoster_path();
 
@@ -204,8 +207,6 @@ public class DetailsActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<VideoResponse> call, Throwable t) {
-                    Log.d("LOG", "-- " + t.getCause() + " " + t.getMessage() + " " + call.toString());
-
                     NetworkUtils.myToast(getApplicationContext(), getString(R.string.warning_fetch_data), Toast.LENGTH_LONG);
                 }
             });
@@ -234,7 +235,6 @@ public class DetailsActivity extends AppCompatActivity {
                         NetworkUtils.myToast(getApplicationContext(), getString(R.string.fail_upload), Constants.LONG);
                     } else {
                         List<Review> videos = response.body().getResults();
-                        Log.d("LOG", videos.toString());
                         recyclerViewReviews.setAdapter(new ReviewAdapter(getApplicationContext(), videos));
                         recyclerViewReviews.smoothScrollToPosition(0);
                     }
@@ -265,11 +265,55 @@ public class DetailsActivity extends AppCompatActivity {
 
             case R.id.ic_favorite:
 
-                if (movieRepository.insert(movie) > 0) {
-                    NetworkUtils.myToast(this, getString(R.string.insert_ok), Constants.SHORT);
+                ContentValues contentValues = new ContentValues();
+                Uri uri;
+
+                contentValues.put(TaskContract.TaskEntry.COLUMN_ID, movie.getId());
+                contentValues.put(TaskContract.TaskEntry.COLUMN_TITLE, movie.getTitle());
+                contentValues.put(TaskContract.TaskEntry.COLUMN_ORIGINAL_TITLE, movie.getOriginal_title());
+                contentValues.put(TaskContract.TaskEntry.COLUMN_POST_PATH, movie.getPoster_path());
+                contentValues.put(TaskContract.TaskEntry.COLUMN_IMAGE, movie.getBackdrop_path());
+                contentValues.put(TaskContract.TaskEntry.COLUMN_POPULARITY, movie.getPopularity());
+                contentValues.put(TaskContract.TaskEntry.COLUMN_ORIGINAL_LANGUAGE, movie.getOriginal_language());
+                contentValues.put(TaskContract.TaskEntry.COLUMN_VOTE_AVERAGE, movie.getVote_average());
+                contentValues.put(TaskContract.TaskEntry.COLUMN_ADULT, movie.getAdult());
+                contentValues.put(TaskContract.TaskEntry.COLUMN_VIDEO, movie.getVideo());
+                contentValues.put(TaskContract.TaskEntry.COLUMN_RELEASE_DATE, movie.getRelease_date());
+                contentValues.put(TaskContract.TaskEntry.COLUMN_VOTE_AVERAGE, movie.getVote_average());
+                contentValues.put(TaskContract.TaskEntry.COLUMN_OVERVIEW, movie.getOverview());
+                contentValues.put(TaskContract.TaskEntry.COLUMN_VOTE_COUNT, movie.getVote_count());
+
+                uri = getContentResolver().insert(TaskContract.TaskEntry.CONTENT_URI, contentValues);
+
+                if (uri != null) {
+                    NetworkUtils.myToast(this, getString(R.string.yepInserMovie), Constants.SHORT);
                 } else {
-                    movieRepository.delete(movie);
-                    NetworkUtils.myToast(this, getString(R.string.deleted), Constants.SHORT);
+                    builder.setIcon(R.drawable.ic_launcher_background);
+                    builder.setTitle(R.string.removeMovie);
+                    builder.setMessage(R.string.messegeRemove);
+                    builder.setPositiveButton(R.string.yep, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String stringId = String.valueOf(movie.getId());
+                            Uri uri = TaskContract.TaskEntry.CONTENT_URI;
+                            uri = uri.buildUpon().appendPath(stringId).build();
+                            getContentResolver().delete(uri, null, null);
+                            NetworkUtils.myToast(getApplicationContext(), getString(R.string.removedMovie), Constants.SHORT);
+                            favoriteMovie.setVisibility(View.INVISIBLE);
+
+
+                        }
+                    });
+                    builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            return;
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+
                 }
                 return true;
 
@@ -290,5 +334,6 @@ public class DetailsActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 }
